@@ -1,0 +1,63 @@
+No.75 Sort Colors
+三路快速排序的关键是，确定每个元素区间的范围，闭区间还是开区间。循环条件是区间之间没有交集（[li+1, i）和 [gt,r]的循环条件是i<gt, i这个未定元素进入某一个元素区间内部时，循环终止）。
+在排序开始前，要保证三个区间里一个元素都没有 : lt = -1, gt = nums.size(), i从0开始。
+
+class Solution {
+public:
+    void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+        vector<int> nums;
+        
+        for(int i = 0; i< m; i++){
+            nums[i] = nums1[i];
+        }
+        
+        int i, j = 0;
+        for(int k = 0; k < m+n; k++){
+            if( nums[i] < nums2[j] ){
+                nums1[k] = nums[i];
+                i++;
+            }
+            
+            else if(nums[i] > nums2[j]){
+                nums1[k] = nums2[j];
+                j++;
+            }
+            
+            else{
+                nums1[k] = nums[i];
+                k++;
+                nums1[k] = nums2[j];
+                i++;
+                j++;
+            }                  
+        }
+        
+        
+    }
+};
+
+class Solution {
+public:
+    void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+        vector<int> nums;
+        for(int i = 0; i<m; i++)
+            nums[i] = nums1[i];
+        int i,j = 0;
+        while(j < n){
+            if(nums[i] < nums2[j]){
+                nums1[i] = nums[i];
+            }
+                
+            else if(nums1[i] > nums2[j]){
+                
+            }
+        }
+        
+    }
+};
+
+No.167 对撞指针
+
+No.209 滑动窗口
+
+滑动窗口和对撞指针的区别：滑动窗口要求连续元素

@@ -1,0 +1,3 @@
+int lo = 0, hi = numbers.length - 1; 数组对撞指针
+
+return new int[]{lo + 1, hi + 1}; 原地建数组

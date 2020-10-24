@@ -1,0 +1,26 @@
+Leetcode No.15
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        HashMap<Integer, Integer> m = new HashMap<>();
+        for(int n : nums){
+            m.put(n, m.getOrDefault(n, 0) + 1);
+        }
+        
+        List<List<Integer>> list = new ArrayList<>();
+        
+        for(int i : nums){
+            m.put(i, m.getOrDefault(i, 0) - 1);
+            if(m.get(i) == 0)
+                m.remove(i);
+            for(Integer j : m.keySet()){
+                if(m.get(j) == 0)
+                    m.remove(j);
+                int compelement = 0 - i - j;
+                if( m.containsKey(compelement)){
+                    list.add(Arrays.asList(i, j, compelement));
+                }
+            }
+        }
+        return list;
+    }
+}

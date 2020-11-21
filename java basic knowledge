@@ -37,8 +37,8 @@ for(Map.Entry<String,String> entry : map.entrySet()){
 } 
 for (Integer key : map.keySet()) {
     Integer value = map.get(key);
-    System.out.println("Key = " + key + ", Value = " + value);
-  }
+    System.out.println("Key = " + key + ", Value = " + value);}
+HashMap集合中,获取不存在的key时并不会报异常, 会返回null
 
 
 队列：

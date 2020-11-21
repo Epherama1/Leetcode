@@ -61,3 +61,78 @@ No.167 对撞指针
 No.209 滑动窗口
 
 滑动窗口和对撞指针的区别：滑动窗口要求连续元素
+
+No.349 Set的使用
+class Solution {
+    public int[] intersection(int[] nums1, int[] nums2) {
+       Set<Integer> set = new HashSet<>();  //set的初始化
+        for(int i : nums1)
+            set.add(i);
+        
+        Set<Integer> set2 = new HashSet<>();   //Set的循环
+        for(int i : nums2)
+            set2.add(i);
+        
+        List<Integer> result = new ArrayList<>(); //ArrayList的初始化
+        
+        for(int i : set2){
+            if(set.contains(i)){
+                result.add(i);
+            }
+        }
+        
+        int[] ints = new int[result.size()];    //Array的初始化
+        for(int i = 0; i < result.size(); i++)
+            ints[i] = result.get(i);          //ArrayList不能直接用[i]获取元素，要用get()
+        
+        return ints;
+    }
+}
+
+
+No.350 Map的使用
+class Solution {
+    public int[] intersect(int[] nums1, int[] nums2) {
+    
+    HashMap<Integer, Integer> m = new HashMap<>(); //Map的初始化
+    for (int n : nums1) {
+        m.put(n, m.getOrDefault(n, 0) + 1);        //将数组元素存入Map中
+    }
+    int k = 0;
+    for (int n : nums2) {
+        int cnt = m.getOrDefault(n, 0);            
+        if (cnt > 0) {
+            nums1[k++] = n;                       //为节省空间，可以使用已经被存储过的数据结构
+            m.put(n, cnt - 1);                    //Map中元素使用完频率减一（更新Map）
+        }
+    }
+    return Arrays.copyOfRange(nums1, 0, k);
+    }
+}
+
+No.202 
+//用set判断循环，比如分割某个数，几次循环之后又回到了最开始的数，那这就是死循环
+Set<Integer> seen = new HashSet<>();
+        
+        while(true){
+            if(seen.contains(n))
+                return false;
+            if(n==1)
+                return true;
+            seen.add(n);
+            n = getNext(n);
+
+No.1
+public int[] twoSum(int[] nums, int target) {
+        Map<Integer, Integer> m = new HashMap<>();
+        for(int i = 0; i < nums.length ; i++){
+            m.put(nums[i], i);
+        }
+        
+        for(int i = 0; i < nums.length ; i++){
+            int compelement = target - nums[i];
+            if(m.containsKey(compelement) && m.get(compelement)!=i){
+                return new int[] {i, m.get(compelement)};
+            }
+        }
+        throw new IllegalArgumentException("No two sum solution");

@@ -155,13 +155,44 @@ class Solution {
 No.206
 ListNode prev = null;
 ListNode curr = head;
-     while(curr != null){
+     while(curr != null){               //以谁作为循环的判断条件，在循环内就必须以谁的更新结尾，为了确保不会出现null.next，如果还需要更新之后的节点，那就在每次循环的开始更新，需要这种更新的节点不用在循环外定义，在循环内定义即可
             ListNode next = curr.next;  //在下一次循环里更新上一次的next，只能用一定不为null的节点.next，因为null.next报错空指针
             curr.next = prev;
             prev = curr;
             curr = next;
         }
+
+No.24
+class Solution {
+    public ListNode swapPairs(ListNode head) {
+        if(head == null)
+            return null;
         
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        
+        ListNode prev = dummy;                          //初始化到循环判断的那一个节点即可，剩下的要不不需要，要不就是需要在循环哪初始化
+        ListNode firstnode = head;
+        
+        while(firstnode != null) {                      //以谁作为循环的判断条件，在循环内就必须以谁的更新结尾，为了确保不会出现null.next，如果还需要更新之后的节点，那就在每次循环的开始更新，需要这种更新的节点不用在循环外定义，在循环内定义即可                                                 
+            ListNode secondnode = firstnode.next;       //在下一次循环里更新上一次的next，只能用一定不为null的节点.next，因为null.next报错空指针
+            if(secondnode == null)
+                break;
+            
+            prev.next = secondnode;
+            firstnode.next = secondnode.next;
+            secondnode.next = firstnode;
+            
+            prev = firstnode;                           //往前移动一个单位即可，因为已经两两交换了位置相当于移动了两个单位
+            firstnode = prev.next;
+            
+        }
+        
+        return dummy.next;
+    }
+}
+
+
 No.92
 class Solution {
     public ListNode reverseBetween(ListNode head, int m, int n) {
@@ -180,7 +211,7 @@ class Solution {
         ListNode tail = curr;   
         
         while(n > 0){
-            ListNode next = curr.next;
+            ListNode next = curr.next;  //链表reverse需要三个指针：prev，curr，next
             curr.next = prev;
             prev = curr;
             curr = next;
@@ -194,5 +225,49 @@ class Solution {
         
         tail.next = curr;
         return head;
+    }
+}
+
+No.86
+ListNode greater = new ListNode(0);          //建立value等于0的虚拟头节点
+        ListNode pointer_g = greater;        //指向头节点的指针，为了保留两个列表的开头指针以便于最后连接
+        ListNode less = new ListNode(0);
+        ListNode pointer_l = less;
+        
+        ListNode curr = head;
+        
+        while(curr != null){
+            if(curr.val < x){                //获取链表节点的值
+                pointer_l.next = curr;
+                pointer_l = curr;
+                curr = curr.next;
+            }
+            else{
+                pointer_g.next = curr;
+                pointer_g = curr;
+                curr = curr.next;
+            }  
+        }
+        pointer_g.next = null;
+        pointer_l.next = greater.next;
+        return less.next;                    //避开虚拟头节点
+
+No.203
+class Solution {
+    public ListNode removeElements(ListNode head, int val) {
+        ListNode sentinel = new ListNode(0);
+        sentinel.next = head;
+        
+        ListNode prev = sentinel;            //删除链表节点只需要两个指针
+        ListNode curr = head;
+        
+        while(curr != null){
+            if(curr.val == val)              //若节点删除，则只有curr往前移动，prev保持不动
+                prev.next = curr.next;
+            else
+                prev = curr;                 //若节点不删除，curr和prev都要移动
+            curr = curr.next;
+        }    
+        return sentinel.next;                //避开虚拟头节点
     }
 }

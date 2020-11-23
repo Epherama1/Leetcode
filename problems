@@ -382,3 +382,104 @@ class Solution {
         return levels;
     }
 }
+
+No。347
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+        // O(1) time
+        if (k == nums.length) {
+            return nums;
+        }
+        
+        // 1. build hash map : character and how often it appears
+        // O(N) time
+        Map<Integer, Integer> count = new HashMap();
+        for (int n: nums) {
+          count.put(n, count.getOrDefault(n, 0) + 1);
+        }
+
+        // init heap 'the less frequent element first'
+        Queue<Integer> heap = new PriorityQueue<>((n1, n2) -> count.get(n1) - count.get(n2));
+
+        // 2. keep k top frequent elements in the heap
+        // O(N log k) < O(N log N) time
+        for (int n: count.keySet()) {
+          heap.add(n);
+          if (heap.size() > k) heap.poll();    
+        }
+
+        // 3. build an output array
+        // O(k log k) time
+        int[] top = new int[k];
+        for(int i = k - 1; i >= 0; --i) {
+            top[i] = heap.poll();
+        }
+        return top;
+    }
+}
+
+No.23
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) { 
+ 
+        Queue<ListNode> q = new PriorityQueue<>((n1, n2) -> n1.val - n2.val); //最小堆
+        for(ListNode l : lists){
+            if(l!=null){
+                q.add(l);                //把每个链表（的头节点）入堆（每个头节点还是和身子连在一起的）
+            }        
+        }
+        ListNode head = new ListNode(0);
+        ListNode point = head;
+        while(!q.isEmpty()){ 
+            point.next = q.poll();       //将头节点最小的一个链表弹出
+            point = point.next;          //将整个链表连在目标链表上（但其实只为了获取头节点元素）
+            ListNode next = point.next;  //判断连上的链表出头节点外是否还有其他节点
+            if(next!=null){              //若有，则将出头节点外剩下的子链表入堆
+                q.add(next);             //每次从堆里面弹出头节点最小的那个链表，只将该链表的头节点放入目标链表（但其实剩下的部分也会留在目标链表中，但下一次循环又会被新的剩余部分覆盖），然后把剩下的没有头的部分作为一个新链表入堆
+            }
+        }
+        return head.next;
+    }
+}
+
+No.226
+class Solution {
+    public TreeNode invertTree(TreeNode root) { //含义：返回以root为节点反转后的二叉树
+    if (root == null) 
+        return null;
+    
+    TreeNode right = invertTree(root.right); //先将root.right为根的二叉树反转
+    TreeNode left = invertTree(root.left);   //再将root.left为根的二叉树反转
+    root.left = right;                       //将两个反转后的二叉树交换位置
+    root.right = left;
+    return root;
+    }
+}
+
+No.100
+class Solution {
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        // p and q are both null
+    if (p == null && q == null) 
+        return true;                      //递归到底情况1
+    // one of p and q is null
+    if (q == null || p == null) 
+        return false;                     //递归到底情况2
+    if (p.val != q.val) 
+        return false                      //若根节点值相同且左右子树相同，则返回true
+    return isSameTree(p.right, q.right) && isSameTree(p.left, q.left);  //两棵子树都必须满足
+    }
+}
+
+No.112
+class Solution {
+  public boolean hasPathSum(TreeNode root, int sum) {
+    if (root == null)                                  //终止条件=初始时的corner case
+      return false;
+
+    sum -= root.val;
+    if ((root.left == null) && (root.right == null))
+      return (sum == 0);
+    return hasPathSum(root.left, sum) || hasPathSum(root.right, sum); //两棵子树有一棵满足即可
+  }
+}

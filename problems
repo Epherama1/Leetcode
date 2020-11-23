@@ -271,3 +271,114 @@ class Solution {
         return sentinel.next;                //避开虚拟头节点
     }
 }
+
+No.19
+ListNode dummy = new ListNode(0);
+dummy.next = head;
+ListNode pointer1 = dummy;
+ListNode pointer2 = pointer1.next;
+
+while(n > 0){
+    pointer2 = pointer2.next;
+    n--;
+}
+
+while(pointer2 != null){
+    pointer1 = pointer1.next;
+    pointer2 = pointer2.next;
+}
+
+ListNode curr = pointer1.next;
+pointer1.next = curr.next;
+
+return dummy.next;
+
+
+No.20
+class Solution {
+    
+    private HashMap<Character, Character> mappings;
+    
+    public Solution(){
+        this.mappings = new HashMap<Character, Character>();
+        this.mappings.put(')', '(');
+        this.mappings.put('}', '{');
+        this.mappings.put(']', '[');
+    }
+    
+    public boolean isValid(String s) {
+        
+        Stack<Character> stack = new Stack<Character>();
+        
+        for(char c : s.toCharArray()){
+            if(this.mappings.containsKey(c)){
+                
+                char topelement = stack.empty() ? '#' : stack.pop();  
+                
+                if(topelement != this.mappings.get(c))
+                    return false;
+            }
+            
+            else
+                stack.push(c);
+            
+        }
+        
+        return stack.empty();
+    }
+}
+
+No.102
+//BFS广度优先遍历implementation
+class Solution {
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> levels = new ArrayList<List<Integer>>(); //新建一个二维数组来存储遍历结果，ArrayList中存List<Interger>元素
+        if (root == null)
+            return levels;  //空树直接返回空数组
+        
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();  //使用LinkedList作为队列，队列中元素是树的节点
+        queue.add(root);  //把根节点插入到队列中作为第一个元素
+        int level = 0;    //树的层数标志，也标志二维数组中的第几行
+        while( !queue.isEmpty() ){
+            levels.add(new ArrayList<Integer>());  //在二维数组中添加一个空一维数组元素作为矩阵的一行，每到新一层添加一行
+            
+            int level_length = queue.size();  //同一层树节点的个数
+            for(int i = 0 ; i < level_length; i++){  //遍历数列中属于当前层的节点
+                TreeNode node = queue.remove();  //从队列中第一个元素开始取
+                levels.get(level).add(node.val); //把node.val存在二维数组中的第level行相应的位置
+                
+                if(node.left != null)          //把每个节点的子节点存入队列，这时level_length依旧是原长度->这次循环不会遍历新加入的元素
+                    queue.add(node.left);
+                if(node.right != null)
+                    queue.add(node.right);
+            }
+            level++;    //到矩阵的下一行    
+        }
+        return levels;
+    }
+}
+Recursion：
+class Solution {
+    List<List<Integer>> levels = new ArrayList<List<Integer>>();
+
+    public void helper(TreeNode node, int level) {
+        // start the current level
+        if (levels.size() == level)
+            levels.add(new ArrayList<Integer>());
+
+         // fulfil the current level
+         levels.get(level).add(node.val);
+
+         // process child nodes for the next level
+         if (node.left != null)
+            helper(node.left, level + 1);
+         if (node.right != null)
+            helper(node.right, level + 1);
+    }
+    
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        if (root == null) return levels;
+        helper(root, 0);
+        return levels;
+    }
+}

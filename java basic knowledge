@@ -152,3 +152,18 @@ Arrays.sort(arrayToSort);
     System.out.println("排序后");
     for (int i = 0; i < arrayToSort.length; i++)
         System.out.println(arrayToSort[i]);
+
+判断语句：
+char topelement = stack.empty() ? '#' : stack.pop();
+
+最大堆：
+Queue<Integer> heap = new PriorityQueue<>((n1, n2) -> count.get(n2) - count.get(n1));
+最小堆：
+Queue<Integer> heap = new PriorityQueue<>((n1, n2) -> count.get(n1) - count.get(n2));
+for (int n: count.keySet()) {
+          heap.add(n);
+          if (heap.size() > k) heap.poll();    
+        }
+
+建数组：
+int[] top = new int[k];

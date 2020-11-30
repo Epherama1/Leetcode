@@ -183,3 +183,17 @@ int[] zero = new int[0];  //声明并创建一数组对象，长度是0；
 语句二虽已初始化，打印“nil.length”会出现异常：NullPointerException； 
 语句三打印“nil.length”是0，数组内还没有元素。
 假设一个方法返回一个数组，如果它返回null，则调用方法必须先判断是否返回null，才能对放回数组进一步处理，而如果返回空数组，则无须null引用检查。鉴于此，返回数组的方法在没有结果时我们通常返回空数组，而不是null，这样做对于函数调用者的处理比较方便。
+
+int twoDigit = Integer.valueOf(s.substring(i-2, i)); //把字符串的相应部分转换成整数
+
+List<Integer> strian = new ArrayList<Integer>(); //对吗？
+strian.get(i) //获得第i号元素的值
+
+List对象不能用[][]检索，只能用.get()
+
+//定义一个整型数组:3行4列
+int a[][] = new int[3][4];
+//获取行数---3行
+int lenY = a.length;
+//获取列数---4列
+int lenX = a[0].length;

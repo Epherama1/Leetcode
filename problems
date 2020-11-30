@@ -591,7 +591,7 @@ class Solution {
 }
 
 No.416
-//背包问题，
+//判断“是否可行”背包问题
 class Solution {
     public boolean canPartition(int[] nums) {
         int totalSum = 0;
@@ -604,17 +604,18 @@ class Solution {
         int subSetSum = totalSum / 2;
         int n = nums.length;
         
-        boolean dp[][] = new boolean[n][subSetSum + 1];
+        boolean dp[][] = new boolean[n][subSetSum + 1];    //i代表从nums[0]到nums[i]中选取subset使其满足条件，i的取值从0到n-1，一共n个
+                                                           //subSetSum代表剩余容量，取值从0到subSetSum，一共subSetSum+1个
         
-        for(int i = 0 ; i <= subSetSum ; i++){
+        for(int i = 0 ; i <= subSetSum ; i++){             //初始化i=0的一整行，M[0，w]
             if(i == 0 || i == nums[0])
                 dp[0][i] = true;
             else
                 dp[0][i] = false;
         }
         
-        for(int i = 1 ; i < n ; i++){
-            for(int j = 0 ; j < subSetSum + 1 ; j++){
+        for(int i = 1 ; i < n ; i++){                     //循环n-2次，i=0时已被初始化，i最多取到n-1
+            for(int j = 0 ; j < subSetSum + 1 ; j++){     //循环subSetSUm+1次
                 if(j >= nums[i]){
                     dp[i][j] = dp[i - 1][j] || (dp[i - 1][j - nums[i]]); 
                 }

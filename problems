@@ -626,3 +626,132 @@ class Solution {
         return dp[n-1][subSetSum];
     }
 }
+
+No.322
+                                             //完全背包问题，数组里存放的是种类，并不是所有元素
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        if(coins == null || coins.length == 0)
+            return -1;
+        
+        int n = coins.length;
+        
+        int dp[][] = new int[n][amount+1];
+        
+        for(int i = 0 ; i <= amount ; i++){
+            int s = i/coins[0];              //容量问题中初始化：看是否可以用无限次第一个物品来把从0到amount的背包填满 => 整除问题
+            int y = i%coins[0];              
+            
+            if(y==0)                         //若可以整除，则把商作为初始值
+                dp[0][i] = s;
+            else                             //若不能整除，则看整个问题是求最大值还是最小值，若是求最小值则选一个极大值作为初始值，若是求最大值则选一个极小值作为初始值
+                dp[0][i] = 10001;            //极大值和极小值的选择根据问题规模选
+           
+        }
+        
+        for(int i = 1 ; i < n ; i++)
+            for(int j = 0 ; j <=amount ; j++){     //种类数组的循环过程和数量数组一样，都是+1
+                if(coins[i] <= j)
+                    dp[i][j] = Math.min( 1 + dp[i][j - coins[i]] , dp[i-1][j]  );
+                else
+                    dp[i][j] = dp[i-1][j];
+            }
+        if(dp[n-1][amount] == 10001)
+            return -1;
+        else
+            return dp[n-1][amount];    
+    }
+}
+
+public class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Set<String> wordDictSet = new HashSet<>(wordDict);
+        boolean[] dp = new boolean[s.length()];
+        dp[0] = false;
+        for (int i = 1; i < s.length(); i++) {
+            for (int j = 0; j < i; j++) {
+                if (dp[j] && wordDictSet.contains(s.substring(j, i+1))) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[s.length()-1];
+    }
+}
+
+Prefix Sum: Find a number of continuous subarrays/submatrices/tree paths that sum to target
+
+No.437
+class Solution {
+    int count = 0;
+    int k;
+    HashMap<Integer, Integer> h = new HashMap();
+    
+    public void preorder(TreeNode node, int currSum) {
+        if (node == null)                              //遍历到叶子节点直接返回
+            return;
+        
+        // current prefix sum
+        currSum += node.val;
+
+        // here is the sum we're looking for
+        if (currSum == k)
+            count++;
+        
+        // number of times the curr_sum − k has occured already, 
+        // determines the number of times a path with sum k 
+        // has occured upto the current node
+        count += h.getOrDefault(currSum - k, 0);
+        
+        // add the current sum into hashmap
+        // to use it during the child nodes processing
+        h.put(currSum, h.getOrDefault(currSum, 0) + 1);
+
+        // process left subtree
+        preorder(node.left, currSum);
+        // process right subtree
+        preorder(node.right, currSum);
+
+        // remove the current sum from the hashmap
+        // in order not to use it during 
+        // the parallel subtree processing
+        h.put(currSum, h.get(currSum) - 1);
+    }    
+            
+    public int pathSum(TreeNode root, int sum) {
+        k = sum;
+        preorder(root, 0);
+        return count;
+    }
+}
+
+No.560
+public class Solution {
+    public int subarraySum(int[] nums, int k) {
+        int count = 0, currSum = 0;
+        HashMap<Integer, Integer> h = new HashMap();
+        
+        for (int num : nums) {
+            // current prefix sum
+            currSum += num;
+            
+            // situation 1:  
+            // continuous subarray starts 
+            // from the beginning of the array
+            if (currSum == k)
+                count++;
+            
+            // situation 2:
+            // number of times the curr_sum − k has occured already, 
+            // determines the number of times a subarray with sum k 
+            // has occured upto the current index
+            count += h.getOrDefault(currSum - k, 0);
+            
+            // add the current sum
+            h.put(currSum, h.getOrDefault(currSum, 0) + 1);    
+        }
+                
+        return count;
+    }
+}

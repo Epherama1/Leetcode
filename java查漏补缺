@@ -197,3 +197,6 @@ int a[][] = new int[3][4];
 int lenY = a.length;
 //获取列数---4列
 int lenX = a[0].length;
+
+
+

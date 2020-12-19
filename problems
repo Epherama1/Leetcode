@@ -840,3 +840,32 @@ public LinkedList<Integer> inorder(TreeNode root, LinkedList<Integer> arr) {
 }
 
 Inorder traversal is not a unique identifier of BST. At the same time both preorder and postorder traversals are unique identifiers of BST.
+The height-balanced restriction means that at each step one has to pick up the number in the middle as a root.
+That works fine with arrays containing odd number of elements but there is no predefined choice for arrays with even number of elements.
+One could choose left middle element, or right middle one, and both choices will lead to different height-balanced BSTs. 
+
+No.108
+//有序数组构建成平衡二叉树
+class Solution {
+    public TreeNode buildtree(int left, int right, int[] nums){
+        if(left > right)
+            return null;
+        
+        int m = (left + right)/2;
+        TreeNode root = new TreeNode(nums[m]);
+        root.left = buildtree(left, m-1, nums);
+        root.right = buildtree(m+1, right, nums);
+        
+        return root;
+    }
+    
+    public TreeNode sortedArrayToBST(int[] nums) {
+        return buildtree(0, nums.length-1, nums);
+    }
+}
+
+Binary tree could be constructed from preorder and inorder traversal.
+Inorder traversal of BST is an array sorted in the ascending order.
+preorder：数组的第一个元素是root
+postorder：数组的最后一个元素是root
+inorder：把数组升序排列得到的结果就是中序遍历，但可能

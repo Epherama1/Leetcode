@@ -846,13 +846,14 @@ One could choose left middle element, or right middle one, and both choices will
 
 No.108
 //有序数组构建成平衡二叉树
+//[]版本
 class Solution {
     public TreeNode buildtree(int left, int right, int[] nums){
         if(left > right)
             return null;
         
         int m = (left + right)/2;
-        TreeNode root = new TreeNode(nums[m]);
+        TreeNode root = new TreeNode(nums[m]);   //需要知道每一个root的索引
         root.left = buildtree(left, m-1, nums);
         root.right = buildtree(m+1, right, nums);
         
@@ -863,9 +864,95 @@ class Solution {
         return buildtree(0, nums.length-1, nums);
     }
 }
+//[)版本
+class Solution {
+    public TreeNode buildtree(int left, int right, int[] nums){
+        if(left >= right)   //变了
+            return null;
+        
+        int m = (left + right-1)/2;        //变了
+        TreeNode root = new TreeNode(nums[m]);
+        root.left = buildtree(left, m, nums);    //变了
+        root.right = buildtree(m+1, right, nums);
+        
+        return root;
+    }
+    
+    public TreeNode sortedArrayToBST(int[] nums) {
+        return buildtree(0, nums.length, nums);    //变了
+    }
+}
 
 Binary tree could be constructed from preorder and inorder traversal.
 Inorder traversal of BST is an array sorted in the ascending order.
 preorder：数组的第一个元素是root
 postorder：数组的最后一个元素是root
-inorder：把数组升序排列得到的结果就是中序遍历，但可能
+inorder：把数组升序排列得到的结果就是中序遍历，但可能的树也有很多种情况，因为不确定哪一个是root节点（可以通过preorder和postorder来判断哪一个是root）
+
+//通过preorder traveral构建二叉树
+//[]版本
+class Solution {
+    int root_index;
+    int[] preorder;
+    HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+    
+    public TreeNode buildtree(int left, int right){
+        if(left == right+1)
+            return null;
+        
+        int m_index = map.get(preorder[root_index]);
+        TreeNode root = new TreeNode(preorder[root_index]);
+        root_index++;
+        
+        root.left = buildtree(left, m_index-1);
+        root.right = buildtree(m_index+1, right);
+        return root;    
+    }
+    
+    public TreeNode bstFromPreorder(int[] preorder) {
+        this.preorder = preorder;
+        this.root_index = 0;
+        int [] inorder = Arrays.copyOf(preorder, preorder.length);
+        Arrays.sort(inorder);
+        
+        int idx = 0;
+        for(int val : inorder){
+            this.map.put(val, idx++);
+        }
+            
+        return buildtree(0, inorder.length-1);
+    }
+}
+//[)版本
+class Solution {
+    int root_index;
+    int[] preorder;
+    HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+    
+    public TreeNode buildtree(int left, int right){
+        if(left == right)               //变了
+            return null;
+        
+        int m_index = map.get(preorder[root_index]);
+        TreeNode root = new TreeNode(preorder[root_index]);
+        root_index++;
+        
+        root.left = buildtree(left, m_index);       //变了
+        root.right = buildtree(m_index+1, right);
+        return root;    
+    }
+    
+    public TreeNode bstFromPreorder(int[] preorder) {
+        this.preorder = preorder;
+        this.root_index = 0;
+        int [] inorder = Arrays.copyOf(preorder, preorder.length);
+        Arrays.sort(inorder);
+        
+        int idx = 0;
+        for(int val : inorder){
+            this.map.put(val, idx++);
+        }
+            
+        return buildtree(0, inorder.length);     //变了
+    }
+}

@@ -956,3 +956,23 @@ class Solution {
         return buildtree(0, inorder.length);     //变了
     }
 }
+
+https://leetcode.com/problems/kth-smallest-element-in-a-bst/Figures/230/bfs_dfs.png
+
+No.230 //Kth Smallest Element in a BST
+class Solution {
+    public ArrayList<Integer> inorder(TreeNode root, ArrayList<Integer> arr){    //函数声明中的
+        if(root == null)
+            return arr;             //没有节点的话，则对数组不进行任何操作，直接返回
+        inorder(root.left, arr);
+        arr.add(root.val);
+        inorder(root.right, arr);
+        return arr;
+    }
+    
+    public int kthSmallest(TreeNode root, int k) {
+        ArrayList<Integer> nums = inorder(root, new ArrayList<Integer>());   //如何在函数参数中新建实体化变量
+        return nums.get(k-1);                                                //ArrayList取前k个参数
+    }
+}
+

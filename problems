@@ -883,6 +883,9 @@ class Solution {
     }
 }
 
+前序后序和中序都是深度优先遍历
+广度优先遍历
+
 Binary tree could be constructed from preorder and inorder traversal.
 Inorder traversal of BST is an array sorted in the ascending order.
 preorder：数组的第一个元素是root
@@ -984,7 +987,7 @@ class Solution {
 
     public boolean recurseTree(TreeNode currentNode, TreeNode p, TreeNode q) { //该递归函数的作用是，查看以currentNode为根节点的树中是否含有p或者q
                                                                                //含有p或者q的三种情况：在根节点，在左子节点，在右子节点
-                                                                               //
+                                                                               //每一个“树”递归函数，都是分别对三个对象操作：在根节点，在左子节点，在右子节点。因此在写树递归时，可以抽象的只看一棵三个节点的子树来找逻辑关系
         // If reached the end of a branch, return false.
         if (currentNode == null) {
             return false;

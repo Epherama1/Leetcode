@@ -168,6 +168,10 @@ for (int n: count.keySet()) {
 建数组：
 int[] top = new int[k];
 
+数组拷贝和排序：
+int [] inorder = Arrays.copyOf(preorder, preorder.length);
+Arrays.sort(inorder);
+
 既要判断数组是否为空，又要判断长度是否为0:
 if (grid == null || grid.length == 0) {return 0;}
 两者如果在一句代码中，则要先判断是否为空，否则可能会出现空指针异常。

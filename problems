@@ -1061,3 +1061,7 @@ class Solution {
         return this.ans;
     }
 }
+
+No.257
+前序遍历
+

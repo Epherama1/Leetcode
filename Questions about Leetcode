@@ -1,4 +1,6 @@
-Leetcode No.15
+Leetcode 
+No.15
+//二维列表如何去重？
 class Solution {
     public List<List<Integer>> threeSum(int[] nums) {
         HashMap<Integer, Integer> m = new HashMap<>();

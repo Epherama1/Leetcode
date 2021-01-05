@@ -888,7 +888,7 @@ class Solution {
 
 Binary tree could be constructed from preorder and inorder traversal.
 Inorder traversal of BST is an array sorted in the ascending order.
-preorder：数组的第一个元素是root
+preorder：数组的第一个元素是root，前序遍历可以用来获得一棵树中所有从根节点到叶子节点的路径
 postorder：数组的最后一个元素是root
 inorder：把数组升序排列得到的结果就是中序遍历，但可能的树也有很多种情况，因为不确定哪一个是root节点（可以通过preorder和postorder来判断哪一个是root）
 
@@ -1063,5 +1063,45 @@ class Solution {
 }
 
 No.257
-前序遍历
+前序遍历可以用来获得一棵树中所有从根节点到叶子节点的路径
+class Solution {
+  public void construct_paths(TreeNode root, String path, LinkedList<String> paths) { //寻找由上而下的未知数（路径），要用返回值为空的递归函数，然后把一个或多个数据结构传给递归函数，并且这个数据结构在整个递归过程中跟踪变化
+    if (root != null) {                      //是否为null的判断必须放在递归函数内部
+      path += Integer.toString(root.val);    //每一次递归都更新path
+      if ((root.left == null) && (root.right == null))  // if reach a leaf
+        paths.add(path);  // update paths    //但只有每次到叶子节点时才更新paths
+      else {
+        path += "->";  // extend the current path
+        construct_paths(root.left, path, paths);
+        construct_paths(root.right, path, paths);
+      }
+    }
+  }
+  public List<String> binaryTreePaths(TreeNode root) {
+    LinkedList<String> paths = new LinkedList();
+    construct_paths(root, "", paths);
+    return paths;
+  }
+}
 
+class Solution {
+    private void constructPath(TreeNode node, int sum, List<Integer> path, List<List<Integer>> paths){
+        if(node != null){
+            path.add(node.val);
+            if(node.left == null && node.right == null && node.val == sum){
+                paths.add(path);
+            }
+            else{
+                constructPath(node.left, sum - node.val, path, paths);
+                constructPath(node.right, sum - node.val, path, paths);
+            } 
+        }
+    }
+    
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        List<Integer> path = new ArrayList<Integer>();
+        List<List<Integer>> paths = new ArrayList<List<Integer>>();
+        constructPath(root, sum, path, paths);
+        return paths;
+    }
+}

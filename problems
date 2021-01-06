@@ -152,13 +152,13 @@ class Solution {
     }
 }
 
-No.206
+No.206                                  //反转节点
 ListNode prev = null;
-ListNode curr = head;
+ListNode curr = head;                   //永远以curr/firstnode作为循环条件，next/secondnode都是在循环中第一条命令定义
      while(curr != null){               //以谁作为循环的判断条件，在循环内就必须以谁的更新结尾，为了确保不会出现null.next，如果还需要更新之后的节点，那就在每次循环的开始更新，需要这种更新的节点不用在循环外定义，在循环内定义即可
             ListNode next = curr.next;  //在下一次循环里更新上一次的next，只能用一定不为null的节点.next，因为null.next报错空指针
             curr.next = prev;
-            prev = curr;
+            prev = curr;                //最后只更新pre和curr/firstnode，next/secondnode在循环中更新
             curr = next;
         }
 
@@ -201,7 +201,7 @@ class Solution {
         
         ListNode prev = null;
         ListNode curr = head;
-        while(m > 1){                   //把prev和curr指针移到合适的位置，从左到右赋值
+        while(m > 1){                   //把prev和curr指针移到合适的位置，从左到右赋值，最终curr移动到m对应位置
             prev = curr;
             curr = curr.next;
             m--;
@@ -212,7 +212,7 @@ class Solution {
         
         while(n > 0){
             ListNode next = curr.next;  //链表reverse需要三个指针：prev，curr，next
-            curr.next = prev;
+            curr.next = prev;           //reverse循环结束时，curr指向于最后一个被reverse的下一个元素
             prev = curr;
             curr = next;
             n--;
@@ -229,7 +229,7 @@ class Solution {
 }
 
 No.86
-ListNode greater = new ListNode(0);          //建立value等于0的虚拟头节点
+        ListNode greater = new ListNode(0);          //建立value等于0的虚拟头节点
         ListNode pointer_g = greater;        //指向头节点的指针，为了保留两个列表的开头指针以便于最后连接
         ListNode less = new ListNode(0);
         ListNode pointer_l = less;

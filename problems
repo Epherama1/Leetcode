@@ -59,6 +59,41 @@ public:
 No.167 对撞指针
 
 No.209 滑动窗口
+双层循环，外层的循环声明控制i和j的取值范围（i<=j&&j<nums.length），循环内部控制i和j的增减；内层控制[i,j]的求和设置k遍历区间。
+class Solution {
+    public int minSubArrayLen(int s, int[] nums) {
+        int i = 0;
+        int j = 0;
+        int minlen = nums.length+1;
+        
+        if(nums.length == 0)
+            return 0;
+        
+        //if(nums[0] > s)      //若从i=j=0开始，则不需要判断nums[0]的情况
+            //return 1;
+        
+        while(i<=j && j<nums.length){
+            int sum = 0;
+            for(int k = i ; k <= j ; k++)
+                sum += nums[k];
+            
+            if(sum >= s){
+                minlen = Math.min(minlen, j-i+1);
+                i++;
+            }
+            
+            else
+                j++;         
+        }
+        
+        if(minlen == nums.length+1)
+            return 0;
+        else
+            return minlen;
+    }
+}
+
+
 
 滑动窗口和对撞指针的区别：滑动窗口要求连续元素
 
@@ -1105,3 +1140,99 @@ class Solution {
         return paths;
     }
 }
+
+No.340
+版本一：for循环
+class Solution {
+    public int lengthOfLongestSubstringKDistinct(String s, int k) {
+        int n = s.length();  //获得字符串长度
+        if(n * k == 0)
+            return 0;
+        
+        Map<Character, Integer> map = new HashMap<>(); //HashMap中存的是每一个字符和本字符在字符串中的最右端的索引
+        int maxlen = 1;
+        int j = 0;
+        
+        for(int i = 0 ; i < n ; i++){  //为实现最右端索引只需要不断更新map
+            map.put(s.charAt(i), i);    //或取字符串的每个字符
+            if(map.size() > k){
+                int lowestindex = Collections.min(map.values()); //获取map中最小的value
+                map.remove(s.charAt(lowestindex));
+                j = lowestindex + 1;        //最难理解的部分，左侧指针只要右移一位即可。因为是一个区间，把最左侧的删除之后，只移动一位即可。
+            }
+            
+            maxlen = Math.max(maxlen, i - j + 1);
+        }
+        return maxlen;
+    }
+}
+
+版本二：while循环
+class Solution {
+    public int lengthOfLongestSubstringKDistinct(String s, int k) {
+        int n = s.length();
+        if (n * k == 0) {
+            return 0;
+        }
+        int left = 0;
+        int right = 0;
+       
+        Map<Character, Integer> rightmostPosition = new HashMap<>();
+
+        int maxLength = 1;
+
+        while (right < n) {
+            rightmostPosition.put(s.charAt(right), right++);
+
+            if (rightmostPosition.size() == k + 1) {
+                int lowestIndex = Collections.min(rightmostPosition.values());
+                rightmostPosition.remove(s.charAt(lowestIndex));
+                left = lowestIndex + 1;
+            }
+
+            maxLength = Math.max(maxLength, right - left);
+        }
+        return maxLength;
+    }
+}
+
+No.15
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);      //只能对数组进行排序，不能排arraylist
+        List<List<Integer>> res = new ArrayList<>();
+        
+        for(int i = 0 ; i < nums.length && nums[i] <= 0 ; i++){
+            if(i == 0 || nums[i-1] != nums[i]){       //包含首元素的去重判断  //三个元素中第一个元素的去重
+                twoSumII(nums, i, res);
+            }
+        }
+        return res;
+    }
+    
+    private void twoSumII(int[] nums, int i, List<List<Integer>> res){
+        int lo = i+1;
+        int hi = nums.length - 1;
+        
+        while(lo < hi){                  //不能相等，每个元素只能用一次，若相等则该元素就用了两次
+            int sum = nums[i] + nums[lo] + nums[hi];
+            
+            if(sum < 0){
+                lo++;
+            }
+            else if(sum > 0){
+                hi--;
+            }
+            else{
+                res.add(Arrays.asList(nums[i], nums[lo], nums[hi])); //把元素组合成arraylist
+                lo++;
+                hi--;
+                while(lo < hi && nums[lo] == nums[lo-1]) //三个元素中第二个元素的去重
+                    lo++;
+            }
+        }
+    }
+}
+
+
+

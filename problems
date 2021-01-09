@@ -249,10 +249,10 @@ class Solution {
             ListNode next = curr.next;  //链表reverse需要三个指针：prev，curr，next
             curr.next = prev;           //reverse循环结束时，curr指向于最后一个被reverse的下一个元素
             prev = curr;
-            curr = next;
+            curr = next;                 //循环结束时curr在的位置是最后一个反转元素的下一个位置
             n--;
         }
-        
+                                       //反转链表的头存在prev
         if(conA != null)               //已经reverse完的子链头节点（原先的尾节点）被之前存的prev（主链上一个节点）指向，子链的尾节点（原先的头节点）指向主链的下一个节点（可以为null）
             conA.next = prev;
         else                           //reverse完成后，prev指向子链的头节点，curr指向主链的下一个节点（可以为null）
@@ -376,11 +376,13 @@ class Solution {
         int level = 0;    //树的层数标志，也标志二维数组中的第几行
         while( !queue.isEmpty() ){
             levels.add(new ArrayList<Integer>());  //在二维数组中添加一个空一维数组元素作为矩阵的一行，每到新一层添加一行
-            
+                                                   //和数组不一样，List每次使用都要先添加元素，每次使用二维List都要向其中添加一个一维List
+      
             int level_length = queue.size();  //同一层树节点的个数
             for(int i = 0 ; i < level_length; i++){  //遍历数列中属于当前层的节点
                 TreeNode node = queue.remove();  //从队列中第一个元素开始取
                 levels.get(level).add(node.val); //把node.val存在二维数组中的第level行相应的位置
+                                                 //List的元素访问不能用int[][]，必须用levels.get(level).add()
                 
                 if(node.left != null)          //把每个节点的子节点存入队列，这时level_length依旧是原长度->这次循环不会遍历新加入的元素
                     queue.add(node.left);
@@ -392,6 +394,9 @@ class Solution {
         return levels;
     }
 }
+Collections.reverse(levels);      //反转ArrayList
+list.add(0, object);   //每次在ArrayList开头添加元素
+
 Recursion：
 class Solution {
     List<List<Integer>> levels = new ArrayList<List<Integer>>();
@@ -418,7 +423,7 @@ class Solution {
     }
 }
 
-No。347
+No.347
 class Solution {
     public int[] topKFrequent(int[] nums, int k) {
         // O(1) time
@@ -490,6 +495,10 @@ class Solution {
     return root;
     }
 }
+
+//错误：和交换赋值一样，需要一个中介
+root.left = invertTree(root.right);
+root.right = invertTree(root.left);
 
 No.100
 class Solution {
@@ -1234,5 +1243,60 @@ class Solution {
     }
 }
 
+No.56
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0])); //二位数组，根据特定条件排序
+        LinkedList<int[]> merged = new LinkedList<>();
+        
+        for(int[] interval : intervals){             //二维数组遍历
+            if(merged.isEmpty() || merged.getLast()[1] < interval[0]){   //判断数组是否为空，得到数组最后一个元素
+                merged.add(interval);
+            }
+            else{
+                merged.getLast()[1] = Math.max(merged.getLast()[1], interval[1]); //更新数组元素
+            }
+        }
+        return merged.toArray(new int[merged.size()][]);     //将List转为数组
+    }
+}
 
-
+No.113
+class Solution {
+    private void recurseTree(TreeNode node, int sum, List<Integer> pathNodes, List<List<Integer>> pathsList) {
+        
+        if (node == null) {
+            return;
+        }
+        
+        // Add the current node to the path's list
+        pathNodes.add(node.val);
+        sum = sum - node.val;
+        
+        // Check if the current node is a leaf and also, if it
+        // equals our remaining sum. If it does, we add the path to
+        // our list of paths
+        if (node.left == null && node.right == null) {
+            if(sum == 0){
+                pathsList.add(new ArrayList<>(pathNodes));
+            }
+            
+        } else {
+            
+            // Else, we will recurse on the left and the right children
+            recurseTree(node.left, sum, pathNodes, pathsList);
+            this.recurseTree(node.right, sum, pathNodes, pathsList);
+        }
+        
+        // We need to pop the node once we are done processing ALL of it's
+        // subtrees.
+        pathNodes.remove(pathNodes.size() - 1);                            //若到底了还不符合要求就弹出，看看另一个支怎么样
+    }
+    
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        List<List<Integer>> pathsList = new ArrayList<List<Integer>>();
+        List<Integer> pathNodes = new ArrayList<Integer>();
+        this.recurseTree(root, sum, pathNodes, pathsList);
+        return pathsList;        
+    }
+}

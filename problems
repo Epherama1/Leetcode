@@ -1262,6 +1262,7 @@ class Solution {
 }
 
 No.113
+//如何改成想437有返回值的递归函数？来消除弹出元素
 class Solution {
     private void recurseTree(TreeNode node, int sum, List<Integer> pathNodes, List<List<Integer>> pathsList) {
         
@@ -1298,5 +1299,94 @@ class Solution {
         List<Integer> pathNodes = new ArrayList<Integer>();
         this.recurseTree(root, sum, pathNodes, pathsList);
         return pathsList;        
+    }
+}
+
+No.437
+class Solution {            
+    public int pathSum(TreeNode root, int sum) {
+        if( root == null)
+            return 0;
+        
+        //三种情况分别处理
+        int res = findPath(root, sum);    //路径包含当前节点root，调用“计算包含当前节点的路径个数”函数findPath
+        res += pathSum(root.left, sum);   //路径不包含当前节点但包含左节点
+        res += pathSum(root.right, sum);  //路径不包含当前节点但包含右节点
+        
+        return res;
+    }
+    
+    private int findPath(TreeNode node, int num){   //包含当前节点，不用到达叶子的，路径条数
+        if(node == null)
+            return 0;
+        
+        int res = 0;              //对每个节点的计算，通过返回值累加，所以每次置为零，只计算当前节点的路径条数
+        if(node.val == num)       //每找到一条路径就加1
+            res++;
+        
+        res += findPath(node.left, num - node.val);  //就算找到了路径也不停，继续向下找，因为有负数节点
+        res += findPath(node.right, num - node.val);
+        
+        //若找到一条路径就停而不保证找到所有路径，或者不存在负数节点，则应该这么写：
+        //if(node.val == num)   
+        //    res++;
+                              //找到就不找了，找不到才继续往下找       
+        //else{
+              //res += findPath(node.left, num - node.val);  
+              //res += findPath(node.right, num - node.val);
+        //}
+        
+        return res;
+    }
+}
+
+No.257
+//为什么437就要删除最后的元素而257不用删除？
+//最主要的区别是：257每次到底都add，437只有到底满足一定条件才add
+class Solution {
+  public void construct_paths(TreeNode root, String path, ArrayList<String> paths) { //寻找由上而下的未知数（路径），要用返回值为空的递归函数，然后把一个或多个数据结构传给递归函数，并且这个数据结构在整个递归过程中跟踪变化
+    if (root != null) {                      //是否为null的判断必须放在递归函数内部
+      path += Integer.toString(root.val);    //每一次递归都更新path
+      if ((root.left == null) && (root.right == null))  // if reach a leaf
+        paths.add(path);  // update paths    //但只有每次到叶子节点时才更新paths
+      else {
+        path += "->";  // extend the current path
+        construct_paths(root.left, path, paths);
+        construct_paths(root.right, path, paths);
+      }
+    }
+  }
+
+  public List<String> binaryTreePaths(TreeNode root) {
+    ArrayList<String> paths = new ArrayList();
+    construct_paths(root, "", paths);
+    return paths;
+  }
+}
+
+No.235
+//最低公共父节点
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+
+        // Value of current node or parent node.
+        int parentVal = root.val;
+
+        // Value of p
+        int pVal = p.val;
+
+        // Value of q;
+        int qVal = q.val;
+
+        if (pVal > parentVal && qVal > parentVal) {
+            // If both p and q are greater than parent
+            return lowestCommonAncestor(root.right, p, q);
+        } else if (pVal < parentVal && qVal < parentVal) {
+            // If both p and q are lesser than parent
+            return lowestCommonAncestor(root.left, p, q);
+        } else {
+            // We have found the split point, i.e. the LCA node.
+            return root;
+        }
     }
 }

@@ -439,7 +439,11 @@ class Solution {
         }
 
         // init heap 'the less frequent element first'
-        Queue<Integer> heap = new PriorityQueue<>((n1, n2) -> count.get(n1) - count.get(n2));
+        Queue<Integer> heap = new PriorityQueue<>((n1, n2) -> count.get(n1) - count.get(n2));     //最小堆
+        
+        //minHeap = new PriorityQueue<>();     //最小堆
+        //maxHeap = new PriorityQueue<>(Collections.reverseOrder());  最大堆
+
 
         // 2. keep k top frequent elements in the heap
         // O(N log k) < O(N log N) time
@@ -1388,5 +1392,88 @@ class Solution {
             // We have found the split point, i.e. the LCA node.
             return root;
         }
+    }
+}
+
+No.17
+class Solution {
+  Map<String, String> phone = new HashMap<String, String>() {{
+    put("2", "abc");
+    put("3", "def");
+    put("4", "ghi");
+    put("5", "jkl");
+    put("6", "mno");
+    put("7", "pqrs");
+    put("8", "tuv");
+    put("9", "wxyz");
+  }};
+
+  List<String> output = new ArrayList<String>();     //最终答案是全局的
+
+  public void backtrack(String combination, String next_digits) {    //相当于知道树的层数的多叉树寻路，根节点到叶子节点的路
+    //这又是到叶子节点时，每个叶子节点都是满足的、等价的，这样最后不需要弹出元素。不像求和寻路，只有某些到叶子节点的路径满足要求，这样最后需要弹出元素
+    //combination相当于记录路径，每次到达叶子节点，就将本次路径加入最终答案中
+    //next_digits.length()相当于这棵多叉树还剩的层数
+    //next_digits是为了得到每层的元素都是什么
+    // if there is no more digits to check
+    if (next_digits.length() == 0) {
+      // the combination is done
+      output.add(combination);
+    }
+    // if there are still digits to check
+    else {
+      // iterate over all letters which map 
+      // the next available digit
+      String digit = next_digits.substring(0, 1);   //为了得到每一层元素都是什么，因为并不是一棵真树，元素的值没存在每个节点里。但相当于，每一层都有一个地址，通过该地址可以得到这一层所有的节点的值
+      String letters = phone.get(digit);
+      for (int i = 0; i < letters.length(); i++) {        //通过循环分多个叉（二叉树寻路不需要循环因为只有两个叉）
+        String letter = phone.get(digit).substring(i, i + 1);
+        // append the current letter to the combination
+        // and proceed to the next digits
+        backtrack(combination + letter, next_digits.substring(1));   //通过递归进入下一层，每次递归都要减少树的层数，为了最终得到“到底”的信号
+      }
+    }
+  }
+
+  public List<String> letterCombinations(String digits) {
+    if (digits.length() != 0)
+      backtrack("", digits);
+    return output;
+  }
+}
+
+No.46
+//什么时候remove什么时候不remove？？？
+class Solution {
+    List<List<Integer>> output;
+    boolean[] used;
+    
+    private void generatepermutation(int[] nums, List<Integer> perm){
+        if(perm.size() == nums.length){
+            output.add(new ArrayList<>(perm));     //向二维list中添加一维list
+            return;       //为啥加了return会变快？
+        }
+        
+        for(int i = 0 ; i < nums.length ; i++){    //每一层叶子节点的个数
+            if(!used[i]){                          //上层用过的元素下层不能再用
+                perm.add(nums[i]);
+                used[i] = true;
+                generatepermutation(nums, perm);   //递归语句的下一句是递归到底之后应该执行的语句
+                perm.remove(perm.size() - 1);      //回溯
+                used[i] = false;
+            }
+        }      
+    }
+    
+    public List<List<Integer>> permute(int[] nums) {
+        output = new LinkedList();              //二维List的初始化
+        used = new boolean[nums.length];
+        for(int i = 0 ; i < nums.length ; i++)
+            used[i] = false;
+        
+        List<Integer> perm = new ArrayList<>();
+        generatepermutation(nums, perm);
+        
+        return output;
     }
 }

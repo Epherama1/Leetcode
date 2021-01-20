@@ -202,5 +202,34 @@ int lenY = a.length;
 //获取列数---4列
 int lenX = a[0].length;
 
+Queue<TreeNode> queue = new LinkedList<TreeNode>();
+queue.isEmpty()
+TreeNode node = queue.remove()
+levels.get(level).add(node.val)
 
+Collections.reverse(levels);  //反转一个二维ArrayList
+
+level.add(0, node.val);   //在ArrayList的元素前添加元素
+
+int[] inorder = Arrays.copyOf(preorder, preorder.length);    //拷贝数组并排序
+Arrays.sort(inorder);
+
+public int successor(TreeNode root) {     //找到右子树最小值（一次向右，之后一直向左，直到为空）
+     root = root.right;
+     while (root.left != null) root = root.left;
+     return root.val;
+  }
+    public int predecessor(TreeNode root) {   //找到左子树最大值（一次向左，之后一直向右，直到为空）
+    root = root.left;
+    while (root.right != null) root = root.right;
+    return root.val;
+  }
+
+Map添加元素：
+HashMap<Integer, Integer> m = new HashMap<>();
+    for (int n : nums1) {
+        m.put(n, m.getOrDefault(n, 0) + 1);
+    }
+
+nums.get(k-1);  //选取数组元素前k个元素
 
